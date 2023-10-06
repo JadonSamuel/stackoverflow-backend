@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "proxy": "<http://localhost:3000>"  
   },
   "author": "Manoj Kumar",
   "license": "ISC",
@@ -20,7 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "nodemon": "^2.0.14",
-    "stripe": "^13.8.0",
+    "stripe": "^13.9.0",
     "stripe-cli": "^0.1.0"
   }
 }
