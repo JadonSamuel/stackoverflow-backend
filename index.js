@@ -28,6 +28,16 @@ const subscriptionSchema = new mongoose.Schema({
 
 const Subscription = mongoose.model("Subscription", subscriptionSchema);
 
+const loginHistorySchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  ipAddress: String,
+  browser: String,
+  os: String,
+  timestamp: { type: Date, default: Date.now },
+});
+
+const LoginHistory = mongoose.model("LoginHistory", loginHistorySchema);
+
 // Define the Stripe payment route
 app.post("/subscribe", async (req, res) => {
   const { plan, paymentMethodId } = req.body;
@@ -36,7 +46,7 @@ app.post("/subscribe", async (req, res) => {
     // Create a customer and subscribe them to the chosen plan using Stripe
     const customer = await stripeInstance.customers.create({
       payment_method: paymentMethodId,
-      email: "user@example.com", // Replace with user's email
+      email: "jadonlsamuel51@gmail.com", // Replace with user's email
     });
 
     const subscription = await stripeInstance.subscriptions.create({
@@ -53,6 +63,22 @@ app.post("/subscribe", async (req, res) => {
     console.error("Error:", error);
     res.status(500).json({ error: "Subscription failed." });
   }
+});
+
+// OTP Authentication Route
+app.post("/authenticate", (req, res) => {
+  // Implement your OTP authentication logic here
+  // Check the OTP provided by the user against the stored OTP
+  // If authentication is successful, you can set a flag in the user's session or respond accordingly
+  // Return an appropriate response
+});
+
+// Chatbot Route
+app.post("/chatbot", (req, res) => {
+  // Implement your chatbot logic here
+  // Retrieve the user's message from req.body.message
+  // Process the message and generate a response
+  // Return the response as JSON
 });
 
 app.use("/", (req, res) => {
