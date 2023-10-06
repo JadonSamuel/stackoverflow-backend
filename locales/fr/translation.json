@@ -1,0 +1,5 @@
+{
+  "welcome": "Bienvenue sur Mon Application",
+  "greeting": "Bonjour, {{name}} !",
+  "buttonLabel": "Cliquez ici"
+}
