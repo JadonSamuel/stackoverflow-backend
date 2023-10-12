@@ -7,6 +7,8 @@ import answerRoutes from "./routes/Answers.js";
 import connectDB from "./connectMongoDb.js";
 import mongoose from "mongoose";
 import stripe from "stripe";
+import chatbotRoutes from "./routes/chatbot.js";
+import otpRoutes from "./routes/otp.js"
 
 import i18n from "i18n"; // Import i18n for internationalization support
 
@@ -40,15 +42,7 @@ const loginHistorySchema = new mongoose.Schema({
 
 const LoginHistory = mongoose.model("LoginHistory", loginHistorySchema);
 
-// Configure i18n for internationalization
-i18n.configure({
-  locales: ["en", "fr", "hi"], // Define the supported languages
-  directory: "./locales", // Directory where your translation files are stored
-  defaultLocales: "en", // Set the default language
-  cookie: "lang", // Name of the cookie to store the user's selected language
-});
 
-app.use(i18n.init); // Initialize i18n middleware
 
 // Define the Stripe payment route
 app.post("/subscribe", async (req, res) => {
@@ -77,21 +71,7 @@ app.post("/subscribe", async (req, res) => {
   }
 });
 
-// OTP Authentication Route
-app.post("/authenticate", (req, res) => {
-  // Implement your OTP authentication logic here
-  // Check the OTP provided by the user against the stored OTP
-  // If authentication is successful, you can set a flag in the user's session or respond accordingly
-  // Return an appropriate response
-});
 
-// Chatbot Route
-app.post("/chatbot", (req, res) => {
-  // Implement your chatbot logic here
-  // Retrieve the user's message from req.body.message
-  // Process the message and generate a response
-  // Return the response as JSON
-});
 
 app.use("/", (req, res) => {
   res.send("This is a stack overflow clone API");
@@ -100,6 +80,8 @@ app.use("/", (req, res) => {
 app.use("/user", userRoutes);
 app.use("/questions", questionRoutes);
 app.use("/answer", answerRoutes);
+app.use("/chatbot", chatbotRoutes);
+app.use("/otp", otpRoutes);
 
 const PORT = process.env.PORT || 5000;
 const CONNECTION_URL = process.env.CONNECTION_URL;
