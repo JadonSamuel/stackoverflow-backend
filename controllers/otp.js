@@ -7,17 +7,19 @@ const { AUTH_EMAIL } = process.env;
 const sendOTPController = async (req, res) => {
   try {
     const { email, subject, message, duration } = req.body;
-    const createdOTP = await sendOTP({
-      email,
-      subject,
-      message,
-      duration,
-    });
+
+    // Your OAuth 2.0 authentication logic
+    const authClient = getOAuth2Client(); // Implement this function to get the OAuth client.
+
+    const createdOTP = await sendOTP({ email, subject, message, duration });
+    await sendEmail(mailOptions, authClient);
+
     res.status(200).json(createdOTP);
   } catch (error) {
     res.status(400).send(error.message);
   }
 };
+
 
 const verifyOTPController = async (req, res) => {
   try {
