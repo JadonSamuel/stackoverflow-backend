@@ -1,20 +1,18 @@
-// routes/checkout.js
 import express from "express";
 import { Router } from "express";
-import Stripe from "stripe"; // Import the Stripe library
+import Stripe from "stripe"; 
 
 const router = Router();
-const stripe = process.env.STRIPE_PRIVATE_KEY;
+const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
 
+// Define your store items
 const storeItems = new Map([
-  [1, { priceInRupees: 0, name: "Free Plan" }],
-  [2, { priceInRupees: 100, name: "Silver Plan" }],
-  [3, { priceInRupees: 1000, name: "Gold Plan" }],
+  [1, { priceInCents: 10000, name: "Silver Plan" }],
+  [2, { priceInCents: 20000, name: "Gold Plan" }],
 ]);
 
 // Create the checkout session route
 router.post("/create-checkout-session", async (req, res) => {
-  console.log("Reached /create-checkout-session route");
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -27,7 +25,7 @@ router.post("/create-checkout-session", async (req, res) => {
             product_data: {
               name: storeItem.name,
             },
-            unit_amount: storeItem.priceInRupees * 100, // Convert rupees to paise,
+            unit_amount: storeItem.priceInCents,
           },
           quantity: item.quantity,
         };
@@ -37,7 +35,6 @@ router.post("/create-checkout-session", async (req, res) => {
     });
     res.json({ url: session.url });
   } catch (e) {
-    console.error(e);
     res.status(500).json({ error: e.message });
   }
 });
