@@ -1,20 +1,19 @@
 import express from "express";
-import { Router } from "express";
-import Stripe from "stripe"; 
+import stripe from "stripe";
+const router = express.Router();
 
-const router = Router();
-const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY);
+// Initialize the Stripe API with your private key
+const stripeClient = new stripe(process.env.STRIPE_PRIVATE_KEY);
 
-// Define your store items
 const storeItems = new Map([
-  [1, { priceInCents: 10000, name: "Silver Plan" }],
-  [2, { priceInCents: 20000, name: "Gold Plan" }],
+  [1, { priceInRupees: 0, name: "Free Plan" }],
+  [2, { priceInRupees: 100, name: "Silver Plan" }],
+  [3, { priceInRupees: 1000, name: "Gold Plan" }],
 ]);
 
-// Create the checkout session route
 router.post("/create-checkout-session", async (req, res) => {
   try {
-    const session = await stripe.checkout.sessions.create({
+    const session = await stripeClient.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
       line_items: req.body.items.map((item) => {
@@ -25,7 +24,7 @@ router.post("/create-checkout-session", async (req, res) => {
             product_data: {
               name: storeItem.name,
             },
-            unit_amount: storeItem.priceInCents,
+            unit_amount: storeItem.priceInRupees * 100, // Convert rupees to paise,
           },
           quantity: item.quantity,
         };
